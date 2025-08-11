@@ -1,0 +1,454 @@
+/* =============
+MAIN LAYOUT
+============= */
+
+.wmp-container {
+    display: flex;
+    height: 100%;
+    gap: 8px;
+}
+
+.wmp-container[data-pane-layout="right-to-left"] {
+    flex-direction: row-reverse;
+}
+
+.wmp-container[data-pane-layout="right-to-left"] .wmp-left-pane {
+    border-inline-end: none;
+    border-inline-start: 1px solid var(--background-modifier-border);
+}
+
+
+/* =============
+LEFT PANE - FOLDER TREE
+============= */
+
+.wmp-container .wmp-left-pane {
+    flex: 0 0 40%;
+    min-width: 200px;
+    border-inline-end: 1px solid var(--background-modifier-border);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.wmp-container .folder-tree-container {
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.wmp-container .folder-tree-item {
+    display: flex;
+    align-items: center;
+    padding: var(--size-2-1) var(--size-4-1);
+    cursor: pointer;
+    gap: 0;
+}
+
+/* States */
+.wmp-container .folder-tree-item:hover {
+    background-color: var(--background-modifier-hover);
+}
+
+.wmp-container .folder-tree-item.is-active {
+    background-color: var(--background-modifier-border-focus);
+}
+
+.wmp-container .folder-tree-item.is-active .folder-item-icon {
+    color: var(--text-normal);
+}
+
+/* Elements */
+.wmp-container .folder-item-icon {
+    color: var(--text-muted);
+}
+
+.wmp-container .folder-item-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-inline-start: var(--size-4-2);
+}
+
+
+/* =============
+RIGHT PANE - MAIN CONTENT
+============= */
+
+.wmp-container .wmp-right-pane {
+    flex: 1 1 60%;
+    min-width: 300px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: var(--size-2-2);
+}
+
+/* View Actions & Folder Info */
+.wmp-container .view-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding-bottom: var(--size-2-2);
+    border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.wmp-container .folder-info-container {
+    border-bottom: 1px solid var(--background-modifier-border);
+    padding-bottom: var(--size-2-2);
+}
+
+.wmp-container .folder-info-container.is-empty {
+    color: var(--text-faint);
+    padding: var(--size-4-2);
+}
+
+/* Tabs & Filtering */
+.wmp-container .wmp-tab-container {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.wmp-container .wmp-tab-content {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex-grow: 1;
+    padding-top: 8px;
+}
+
+.wmp-container .wmp-filter-bar {
+    display: flex;
+    gap: 8px;
+}
+
+/* Outliner & Item Styling */
+.wmp-container .outliner-list-container {
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.wmp-container .outliner-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-2-1);
+}
+
+.wmp-container .outliner-item,
+.wmp-container .folder-info-item {
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius-s);
+}
+
+.wmp-container .outliner-item {
+    background-color: var(--background-secondary);
+    border-inline-start: 7.5px solid var(--status-color, transparent);
+    padding: 0 var(--size-4-2) var(--size-2-2);
+}
+
+.wmp-container .outliner-item:hover {
+    background-color: var(--background-modifier-hover);
+}
+
+.wmp-container .folder-info-item {
+    background-color: transparent;
+}
+
+/* Item Header */
+.wmp-container .outliner-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--size-4-2);
+    padding: var(--size-2-2) 0 var(--size-1-2);
+}
+
+.wmp-container .folder-info-item .outliner-item-header {
+    padding: var(--size-2-2) 0;
+}
+
+.wmp-container .outliner-item-header-left {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--size-4-2);
+}
+
+.wmp-container .outliner-item-header-right {
+    display: flex;
+    align-items: center;
+    gap: var(--size-4-2);
+}
+
+.wmp-container .outliner-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.wmp-container .folder-info-item .outliner-item-header h2 {
+    margin: 0;
+    font-size: var(--font-ui-large);
+}
+
+.wmp-container .collapse-toggle-button {
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+}
+
+/* Item Content & Fields */
+.wmp-container .tagline-container {
+    padding: 0 0 var(--size-2-2);
+}
+
+.wmp-container .tagline-container .metadata-field-value {
+    margin-inline-start: 0;
+}
+
+.wmp-container .tagline-container .field-display-view {
+    font-size: var(--font-ui-small);
+}
+
+.wmp-container .field-display-container {
+    padding: 0;
+}
+
+.wmp-container .field-display-container.is-collapsed {
+    display: none;
+}
+
+.wmp-container .field-display-container p.is-empty {
+    color: var(--text-faint);
+    font-style: italic;
+    padding: var(--size-2-2);
+}
+
+.wmp-container .metadata-field-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.wmp-container .metadata-field-item:not(:first-child) {
+    border-top: 1px solid var(--background-modifier-border);
+    padding-top: var(--size-2-2);
+    margin-top: var(--size-2-2);
+}
+
+.wmp-container .metadata-field-key {
+    font-size: var(--font-ui-smaller);
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: var(--size-1-1);
+}
+
+.wmp-container .metadata-field-value {
+    margin-inline-start: var(--size-4-2);
+}
+
+/* Drag & Drop */
+.wmp-container .drag-handle {
+    cursor: grab;
+}
+
+.wmp-container .folder-tree-item.is-dragging,
+.wmp-container .outliner-item.is-dragging {
+    opacity: 0.5;
+}
+
+.wmp-container .drop-indicator {
+    height: 2px;
+    width: 100%;
+    background-color: var(--interactive-accent);
+}
+
+/* Inline Editor & Suggestions */
+.wmp-container .field-display-view {
+    cursor: text;
+    padding: var(--size-2-2);
+    border-radius: var(--radius-s);
+}
+
+.wmp-container .field-display-view:hover {
+    background-color: var(--background-modifier-hover);
+}
+
+.wmp-container .field-display-view p {
+    margin: 0;
+}
+
+.wmp-container .field-display-view.is-placeholder {
+    color: var(--text-faint);
+    font-style: italic;
+}
+
+.wmp-container .field-display-editor {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Generic Tabs */
+.wmp-tabs-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--background-modifier-border);
+    flex-shrink: 0;
+}
+
+.wmp-tabs-bar {
+    display: flex;
+}
+
+.wmp-tabs-button {
+    display: flex;
+    align-items: center;
+    gap: var(--size-4-2);
+    padding: var(--size-2-3) var(--size-4-3);
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-bottom: none;
+    margin-bottom: -1px;
+    color: var(--text-muted);
+}
+
+.wmp-tabs-button:hover {
+    background-color: var(--background-modifier-hover);
+    color: var(--text-normal);
+}
+
+.wmp-tabs-button.is-active {
+    background-color: var(--background-primary);
+    border-color: var(--background-modifier-border) var(--background-modifier-border) var(--background-primary);
+    border-style: solid;
+    border-width: 1px;
+    color: var(--text-normal);
+    font-weight: 600;
+    border-radius: 5px 5px 0 0;
+}
+
+.wmp-container .wmp-tabs-header {
+    position: sticky;
+    top: 0;
+    background-color: var(--background-primary);
+    z-index: 1;
+}
+
+/* =============
+SETTINGS VIEW
+============= */
+
+/* Settings Layout & Tabs */
+.wmp-settings-layout {
+    display: flex;
+    flex-direction: column;
+}
+
+.wmp-settings-layout .setting-tab-content {
+    padding: var(--size-4-4);
+}
+
+.wmp-settings-layout .wmp-tabs-header {
+    padding: 0 var(--size-4-4);
+}
+
+/* Control Styles */
+.wmp-settings-layout .setting-item-control.wmp-metadata-setting-control,
+.wmp-settings-layout .setting-item-control.wmp-status-setting-control {
+    display: flex;
+    width: 100%;
+    gap: var(--size-4-2);
+}
+
+.wmp-settings-layout .setting-item-control.wmp-metadata-setting-control .setting-editor-extra-button.is-active,
+.wmp-settings-layout .setting-item-control .setting-editor-extra-button:hover {
+    color: var(--interactive-accent);
+}
+
+/* Help Section */
+.wmp-settings-layout .wmp-help-section {
+    border: 1px solid var(--background-modifier-border);
+    border-radius: var(--radius-m);
+    margin-bottom: var(--size-4-3);
+}
+
+.wmp-settings-layout .wmp-help-section summary {
+    display: flex;
+    align-items: center;
+    gap: var(--size-4-2);
+    padding: var(--size-2-3) var(--size-4-3);
+    cursor: pointer;
+    font-size: var(--font-ui-large);
+    font-weight: 600;
+    outline: none;
+}
+
+.wmp-settings-layout .wmp-help-section summary:hover {
+    background-color: var(--background-modifier-hover);
+}
+
+.wmp-settings-layout .wmp-help-section[open] > summary {
+    border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.wmp-settings-layout .wmp-help-content {
+    padding: var(--size-4-4);
+}
+
+.wmp-settings-layout .wmp-help-content ol {
+    padding-inline-start: 20px;
+}
+
+.wmp-settings-layout .wmp-help-item {
+    margin-bottom: var(--size-4-2);
+}
+
+.wmp-settings-layout .wmp-help-item:last-child {
+    margin-bottom: 0;
+}
+
+.wmp-settings-layout .wmp-help-item strong {
+    display: block;
+    margin-bottom: var(--size-1-1);
+    font-weight: 600;
+}
+
+.wmp-settings-layout .wmp-help-item p {
+    margin: 0;
+    color: var(--text-muted);
+}
+
+.wmp-settings-layout .wmp-help-item code {
+    font-size: var(--font-ui-small);
+}
+
+/* =============
+SUGGESTION CONTAINER
+============= */
+
+.wmp-suggestion-container .suggestion {
+    padding: var(--size-2-2);
+}
+
+.wmp-suggestion-container .suggestion-item {
+    padding: var(--size-2-3) var(--size-4-3);
+    border-radius: var(--radius-s);
+}
+
+.wmp-suggestion-container .suggestion-item.is-selected {
+    background-color: var(--background-modifier-hover);
+}
+
+.wmp-suggestion-container .suggestion-title {
+    font-size: var(--font-ui-small);
+}
+
+.wmp-suggestion-container .suggestion-note {
+    font-size: var(--font-ui-smaller);
+    color: var(--text-muted);
+}

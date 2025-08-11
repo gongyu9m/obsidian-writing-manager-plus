@@ -1,0 +1,170 @@
+{
+  "language": "English",
+  "ribbon": {
+    "title": "Open Writing Manager +"
+  },
+  "commands": {
+    "compile": {
+      "name": "Compile current project"
+    }
+  },
+  "statuses": {
+    "idea": "Idea",
+    "writing": "Writing",
+    "done": "Done",
+    "on-hold": "On Hold"
+  },
+  "notices": {
+    "folderNotFound": "Current project folder not found.",
+    "invalidOutputPath": "Invalid compile output path. Please select a valid folder.",
+    "noCompletableFiles": "No files with status '${status}' found to compile.",
+    "noCompletionStatus": "Completion status is not set. Please set it in the plugin settings.",
+    "compileSuccess": "Successfully compiled ${count} files to ${path}",
+    "compileFailure": "Failed to compile files. Check the console for errors.",
+    "metadataSaveFailed": "Failed to save metadata for ${name}."
+  },
+  "view": {
+    "displayText": "Writing Manager +",
+    "noBaseFolder": "Base folder is not set or not found. Please check the plugin settings.",
+    "compileButton": "Compile Project",
+    "noFolderNote": "This folder '${folderName}' has no representative note.",
+    "tabSubfolders": "Folders",
+    "tabScenes": "Scenes",
+    "noContent": "No folders or scenes to display.",
+    "noRepresentativeNote": "This folder has no representative note to edit.",
+    "noMetadataFields": "No metadata fields are configured for display.",
+    "enterFieldValue": "Click to enter value for '${field}'...",
+    "filter": {
+      "allStatuses": "All Statuses",
+      "textPlaceholder": "Filter by name...",
+      "noResults": "No items match your filter."
+    }
+  },
+  "misc": {
+    "toggle": {
+      "expand": "Expand",
+      "collapse": "Collapse"
+    }
+  },
+  "settings": {
+    "default": {
+      "title": "Default",
+      "basePath": {
+        "name": "Base Project Folder",
+        "desc": "The root folder that contains all your novel projects."
+      },
+      "paneLayout": {
+        "name": "Pane Layout",
+        "desc": "The layout direction of the project folders pane and the scenes pane.",
+        "ltr": "Folder Tree | Main Contents",
+        "rtl": "Main Contents | Folder Tree"
+      },
+      "collapseMetadata": {
+        "name": "Collapse details by default",
+        "desc": "When enabled, the details area for each item will be collapsed initially."
+      }
+    },
+    "compilation": {
+      "title": "Compilation",
+      "includeSubfolders": {
+        "name": "Include files from subfolders",
+        "desc": "When enabled, compilation will include files from all nested subfolders."
+      },
+      "includeTitle": {
+        "name": "Include title during compilation",
+        "desc": "When enabled, the final compiled file will include the title (### Title) for each scene (note)."
+      },
+      "compilePath": {
+        "name": "Default Compilation Path",
+        "desc": "The default folder where compiled files will be saved.",
+        "askOption": "Ask every time"
+      },
+      "completionStatus": {
+        "name": "Completion Status",
+        "desc": "Select the status that indicates a scene is complete and ready for compilation."
+      }
+    },
+    "addon": {
+      "title": "Add-on",
+      "enable": {
+        "name": "Enable Folder Representative Notes",
+        "desc": "If enabled, the plugin will recognize a specific note as a representative note for each folder."
+      },
+      "filename": {
+        "name": "Folder Representative Note Filename",
+        "desc": "The filename for representative notes. Use '{{folder_name}}' as a placeholder. Tip: Using '{{folder_name}}.md' is recommended for compatibility with other Folder Note plugins."
+      }
+    },
+    "metadata": {
+      "title": "Metadata Display",
+      "desc": "Manage which metadata fields are displayed. One field can be pinned as a 'tagline' to be always visible.",
+      "add": "Add New Field",
+      "field": {
+        "namePlaceholder": "Enter field name",
+        "taglineTooltip": "Pin as Tagline (always visible)",
+        "delete": "Delete"
+      }
+    },
+    "status": {
+      "title": "Status",
+      "add": "Add New Status",
+      "newStatusName": "New Status",
+      "duplicateError": "The status name '${name}' already exists.",
+      "statusEntry": {
+        "placeholder": "Enter status name",
+        "delete": "Delete"
+      }
+    },
+    "help": {
+      "title": "Help",
+      "quickStart": {
+        "title": "Quick Start",
+        "content": [
+          "In the 'Default Settings' tab, set your 'Base Project Folder' where your writing is stored.",
+          "Select a project folder from the left panel in the plugin view.",
+          "Create scenes (markdown notes) in your folder, then change their status or edit metadata in the right panel.",
+          "When you're done writing, press the 'Compile Project' button to merge everything into one file."
+        ]
+      },
+      "coreConcepts": {
+        "title": "Core Concepts",
+        "content": [
+          {
+            "term": "Base Project Folder",
+            "def": "This is the main workspace for the plugin. This folder and its subfolders will be displayed in the 'Folder Tree' on the left."
+          },
+          {
+            "term": "Folder Representative Note",
+            "def": "A special note that holds information (like an outline or synopsis) about its parent folder. You can set its filename pattern (e.g., `{{folder_name}}.md`) in 'Add-on Settings'. This note is excluded from compilation."
+          },
+          {
+            "term": "Compilation",
+            "def": "This feature gathers all scenes with the 'Completion Status' you've set in 'Compilation Settings' and combines them in order into a single markdown file."
+          }
+        ]
+      },
+      "keyFeatures": {
+        "title": "Key Features",
+        "content": [
+          {
+            "term": "Drag & Drop Reordering",
+            "def": "You can easily change the compilation order by dragging and dropping items in the scene list using the handle icon. This order is saved per folder."
+          },
+          {
+            "term": "Inline Editing",
+            "def": "Click on any metadata field or tagline area to edit its content directly within the view, without needing to open the note itself."
+          }
+        ]
+      },
+      "tips": {
+        "title": "Tips & Tricks",
+        "content": [
+          {
+            "term": "Integration with other 'Folder Note' plugins",
+            "def": "This plugin's 'Folder Representative Note' feature can work seamlessly with other folder note plugins (e.g., a-folder-note). For best compatibility, set the 'Folder Representative Note Filename' in 'Add-on Settings' to `{{folder_name}}.md`. This allows you to manage the note's content in this plugin while maintaining features from other folder note plugins."
+          }
+        ]
+      }
+    }
+  }
+}
