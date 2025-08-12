@@ -44,7 +44,6 @@ LEFT PANE - FOLDER TREE
     gap: 0;
 }
 
-/* States */
 .wmp-container .folder-tree-item:hover {
     background-color: var(--background-modifier-hover);
 }
@@ -57,7 +56,6 @@ LEFT PANE - FOLDER TREE
     color: var(--text-normal);
 }
 
-/* Elements */
 .wmp-container .folder-item-icon {
     color: var(--text-muted);
 }
@@ -84,7 +82,6 @@ RIGHT PANE - MAIN CONTENT
     padding: var(--size-2-2);
 }
 
-/* View Actions & Folder Info */
 .wmp-container .view-actions {
     display: flex;
     justify-content: flex-end;
@@ -102,7 +99,6 @@ RIGHT PANE - MAIN CONTENT
     padding: var(--size-4-2);
 }
 
-/* Tabs & Filtering */
 .wmp-container .wmp-tab-container {
     display: flex;
     flex-direction: column;
@@ -123,7 +119,6 @@ RIGHT PANE - MAIN CONTENT
     gap: 8px;
 }
 
-/* Outliner & Item Styling */
 .wmp-container .outliner-list-container {
     overflow-y: auto;
     flex-grow: 1;
@@ -156,7 +151,6 @@ RIGHT PANE - MAIN CONTENT
     background-color: transparent;
 }
 
-/* Item Header */
 .wmp-container .outliner-item-header {
     display: flex;
     justify-content: space-between;
@@ -202,7 +196,6 @@ RIGHT PANE - MAIN CONTENT
     color: var(--text-muted);
 }
 
-/* Item Content & Fields */
 .wmp-container .tagline-container {
     padding: 0 0 var(--size-2-2);
 }
@@ -251,7 +244,6 @@ RIGHT PANE - MAIN CONTENT
     margin-inline-start: var(--size-4-2);
 }
 
-/* Drag & Drop */
 .wmp-container .drag-handle {
     cursor: grab;
 }
@@ -267,7 +259,6 @@ RIGHT PANE - MAIN CONTENT
     background-color: var(--interactive-accent);
 }
 
-/* Inline Editor & Suggestions */
 .wmp-container .field-display-view {
     cursor: text;
     padding: var(--size-2-2);
@@ -292,7 +283,6 @@ RIGHT PANE - MAIN CONTENT
     box-sizing: border-box;
 }
 
-/* Generic Tabs */
 .wmp-tabs-header {
     display: flex;
     justify-content: space-between;
@@ -340,10 +330,9 @@ RIGHT PANE - MAIN CONTENT
 }
 
 /* =============
-SETTINGS VIEW
+SETTINGS & HELP VIEW
 ============= */
 
-/* Settings Layout & Tabs */
 .wmp-settings-layout {
     display: flex;
     flex-direction: column;
@@ -357,7 +346,6 @@ SETTINGS VIEW
     padding: 0 var(--size-4-4);
 }
 
-/* Control Styles */
 .wmp-settings-layout .setting-item-control.wmp-metadata-setting-control,
 .wmp-settings-layout .setting-item-control.wmp-status-setting-control {
     display: flex;
@@ -370,62 +358,53 @@ SETTINGS VIEW
     color: var(--interactive-accent);
 }
 
-/* Help Section */
-.wmp-settings-layout .wmp-help-section {
-    border: 1px solid var(--background-modifier-border);
-    border-radius: var(--radius-m);
-    margin-bottom: var(--size-4-3);
+.wmp-settings-layout .wmp-tabs-button.wmp-help-button {
+    color: var(--interactive-accent-text);
+    background-color: var(--interactive-accent);
 }
 
-.wmp-settings-layout .wmp-help-section summary {
+.wmp-settings-layout .wmp-tabs-button.wmp-help-button:hover {
+    background-color: var(--interactive-accent-hover);
+}
+
+.wmp-help-view {
+    padding: var(--size-8-4);
+    height: 100%;
+    overflow-y: auto;
+}
+
+.wmp-help-view h1 {
+    font-size: var(--font-ui-largest);
+    font-family: var(--font-interface-override) !important;
+    border-bottom: 1px solid var(--background-modifier-border);
+    padding-bottom: var(--size-2-2);
+    margin-bottom: var(--size-4-4);
+}
+
+.wmp-help-view h2 {
     display: flex;
     align-items: center;
     gap: var(--size-4-2);
-    padding: var(--size-2-3) var(--size-4-3);
-    cursor: pointer;
+    font-size: var(--font-ui-larger);
+    font-family: var(--font-interface-override) !important;
+    margin-top: var(--size-8-4);
+    margin-bottom: var(--size-4-4);
+}
+
+.wmp-help-view h3 {
     font-size: var(--font-ui-large);
-    font-weight: 600;
-    outline: none;
+    font-family: var(--font-interface-override) !important;
 }
 
-.wmp-settings-layout .wmp-help-section summary:hover {
-    background-color: var(--background-modifier-hover);
+.wmp-help-view p, .wmp-help-view li {
+    color: var(--text-normal);
+    font-family: var(--font-text-override) !important;
 }
 
-.wmp-settings-layout .wmp-help-section[open] > summary {
-    border-bottom: 1px solid var(--background-modifier-border);
+.wmp-help-view .wmp-help-content {
+    padding-left: calc(var(--icon-size) + var(--size-4-2));
 }
 
-.wmp-settings-layout .wmp-help-content {
-    padding: var(--size-4-4);
-}
-
-.wmp-settings-layout .wmp-help-content ol {
-    padding-inline-start: 20px;
-}
-
-.wmp-settings-layout .wmp-help-item {
-    margin-bottom: var(--size-4-2);
-}
-
-.wmp-settings-layout .wmp-help-item:last-child {
-    margin-bottom: 0;
-}
-
-.wmp-settings-layout .wmp-help-item strong {
-    display: block;
-    margin-bottom: var(--size-1-1);
-    font-weight: 600;
-}
-
-.wmp-settings-layout .wmp-help-item p {
-    margin: 0;
-    color: var(--text-muted);
-}
-
-.wmp-settings-layout .wmp-help-item code {
-    font-size: var(--font-ui-small);
-}
 
 /* =============
 SUGGESTION CONTAINER

@@ -5,6 +5,7 @@ CONSTANTS & DEFAULTS
 ============= */
 
 const VIEW_TYPE = 'writing-manager-plus-view';
+const HELP_VIEW_TYPE = 'writing-manager-plus-help-view';
 const MARKDOWN_EXTENSION = 'md';
 const ASK_EVERY_TIME = 'ASK_EVERY_TIME';
 const TAB_ID_FILES = 'files';
@@ -110,7 +111,6 @@ async function collectFoldersRecursively(folder) {
 UI COMPONENTS
 ============= */
 
-/* FolderSuggestModal */
 class FolderSuggestModal extends FuzzySuggestModal {
     constructor(app, onChoose) {
         super(app);
@@ -127,7 +127,6 @@ class FolderSuggestModal extends FuzzySuggestModal {
     }
 }
 
-/* LinkSuggest */
 class LinkSuggest extends AbstractInputSuggest {
     constructor(app, inputEl) {
         super(app, inputEl);
@@ -185,7 +184,6 @@ class LinkSuggest extends AbstractInputSuggest {
     }
 }
 
-/* WritingManagerPlusSettingTab */
 class WritingManagerPlusSettingTab extends PluginSettingTab {
 
     activeTab = 'default';
@@ -195,7 +193,6 @@ class WritingManagerPlusSettingTab extends PluginSettingTab {
         this.plugin = plugin;
     }
 
-    // Display & Tab Logic
     display() {
         const { containerEl } = this;
         containerEl.empty();
@@ -214,28 +211,36 @@ class WritingManagerPlusSettingTab extends PluginSettingTab {
             { id: 'display', name: t('settings.metadata.title'), icon: 'tags', render: this._renderDisplaySettings.bind(this) },
             { id: 'status', name: t('settings.status.title'), icon: 'flag', render: this._renderStatusSettings.bind(this) },
             { id: 'compilation', name: t('settings.compilation.title'), icon: 'combine', render: this._renderCompilationSettings.bind(this) },
-            { id: 'addon', name: t('settings.addon.title'), icon: 'puzzle', render: this._renderAddonSettings.bind(this) },
-            { id: 'help', name: t('settings.help.title'), icon: 'help-circle', render: this._renderHelpTab.bind(this) },
+            { id: 'addon', name: t('settings.addon.title'), icon: 'component', render: this._renderAddonSettings.bind(this) },
+            { id: 'help', name: t('settings.help.title'), icon: 'help-circle', isAction: true },
         ];
 
         tabs.forEach(tab => {
             const navItem = tabBar.createEl('div', { cls: 'wmp-tabs-button' });
             setIcon(navItem, tab.icon);
             navItem.createSpan({ text: tab.name });
-            if (this.activeTab === tab.id) navItem.addClass('is-active');
-            navItem.addEventListener('click', () => {
-                this.activeTab = tab.id;
-                this.display();
-            });
+            
+            if (tab.isAction) {
+                navItem.addClass('wmp-help-button');
+                navItem.setAttr('aria-label', t('settings.help.tooltip'));
+                navItem.addEventListener('click', () => {
+                    this.plugin.activateHelpView();
+                });
+            } else {
+                if (this.activeTab === tab.id) navItem.addClass('is-active');
+                navItem.addEventListener('click', () => {
+                    this.activeTab = tab.id;
+                    this.display();
+                });
+            }
         });
 
-        const activeTabContent = tabs.find(tab => tab.id === this.activeTab);
-        if (activeTabContent) {
+        const activeTabContent = tabs.find(tab => tab.id === this.activeTab && !tab.isAction);
+        if (activeTabContent && activeTabContent.render) {
             activeTabContent.render(contentContainer);
         }
     }
 
-    // Settings Panes
     _renderDefaultSettings(containerEl) {
         new Setting(containerEl).setHeading().setName(t('settings.default.title'));
         
@@ -417,47 +422,40 @@ class WritingManagerPlusSettingTab extends PluginSettingTab {
                     .onChange((value) => this.plugin.updateSetting('folderRepresentativeNoteFilename', value, true)));
         }
     }
+}
 
-    _renderHelpTab(containerEl) {
-        new Setting(containerEl).setHeading().setName(t('settings.help.title'));
+class WritingManagerPlusHelpView extends ItemView {
+    constructor(leaf, plugin) {
+        super(leaf);
+        this.plugin = plugin;
+    }
 
-        const helpSections = [
-            { titleKey: 'settings.help.quickStart.title', contentKey: 'settings.help.quickStart.content', icon: 'rocket' },
-            { titleKey: 'settings.help.coreConcepts.title', contentKey: 'settings.help.coreConcepts.content', icon: 'lightbulb' },
-            { titleKey: 'settings.help.keyFeatures.title', contentKey: 'settings.help.keyFeatures.content', icon: 'star' },
-            { titleKey: 'settings.help.tips.title', contentKey: 'settings.help.tips.content', icon: 'wand' },
-        ];
+    getViewType() { return HELP_VIEW_TYPE; }
+    getDisplayText() { return t('settings.help.title'); }
+    getIcon() { return 'help-circle'; }
 
-        helpSections.forEach((section) => {
-            const contentData = t(section.contentKey);
-            if (!contentData || (Array.isArray(contentData) && contentData.length === 0)) return;
+    async onOpen() {
+        const container = this.containerEl.children[1];
+        container.empty();
+        container.addClass('wmp-help-view');
+        
+        container.createEl('h1', { text: t('view.displayText') });
 
-            const detailsEl = containerEl.createEl('details', { cls: 'wmp-help-section', attr: { open: true } });
-            const summaryEl = detailsEl.createEl('summary');
-            setIcon(summaryEl.createSpan({ cls: 'wmp-help-icon' }), section.icon);
-            summaryEl.createEl('strong', { text: t(section.titleKey) });
-            const contentContainer = detailsEl.createEl('div', { cls: 'wmp-help-content' });
+        const helpData = t('settings.help.sections');
 
-            if (Array.isArray(contentData)) {
-                if (contentData.length > 0 && typeof contentData[0] === 'string') {
-                    const listEl = contentContainer.createEl('ol');
-                    contentData.forEach(itemText => listEl.createEl('li', { text: itemText }));
-                } else if (contentData.length > 0 && typeof contentData[0] === 'object') {
-                    contentData.forEach(item => {
-                        const itemEl = contentContainer.createDiv({ cls: 'wmp-help-item' });
-                        itemEl.createEl('strong', { text: item.term });
-                        const p = itemEl.createEl('p');
-                        MarkdownRenderer.render(this.app, item.def, p, '', this);
-                    });
-                }
-            }
+        helpData.forEach(sectionInfo => {
+            const sectionEl = container.createDiv({ cls: 'wmp-help-section' });
+            const titleEl = sectionEl.createEl('h2');
+            setIcon(titleEl, sectionInfo.icon);
+            titleEl.createSpan({ text: sectionInfo.title });
+
+            const contentContainer = sectionEl.createDiv({ cls: 'wmp-help-content' });
+            MarkdownRenderer.render(this.app, sectionInfo.content, contentContainer, '', this);
         });
     }
 }
 
-/* WritingManagerPlusView */
 class WritingManagerPlusView extends ItemView {
-    // View Properties
     plugin;
     currentFolderData = null;
     filesData = [];
@@ -472,7 +470,6 @@ class WritingManagerPlusView extends ItemView {
     filterText = '';
     filterBarEl = null;
 
-    // Lifecycle Methods
     constructor(leaf, plugin) {
         super(leaf);
         this.plugin = plugin;
@@ -490,7 +487,6 @@ class WritingManagerPlusView extends ItemView {
         await this.refresh();
     }
 
-    // Core Rendering & Layout
     constructLayout() {
         const container = this.containerEl.children[1];
         container.empty();
@@ -514,7 +510,6 @@ class WritingManagerPlusView extends ItemView {
         this.renderRightPane();
     }
 
-    // Left Pane Rendering
     renderLeftPane() {
         this.leftPane.empty();
         const treeContainer = this.leftPane.createDiv({ cls: 'folder-tree-container' });
@@ -558,7 +553,6 @@ class WritingManagerPlusView extends ItemView {
         this.getSortedChildFoldersFor(folder).forEach(child => this.renderSingleFolderNode(container, child, level + 1));
     }
 
-    // Right Pane Rendering
     renderRightPane() {
         this.rightPane.empty();
         
@@ -576,7 +570,7 @@ class WritingManagerPlusView extends ItemView {
         
         this.activeTabName = this._determineActiveTab(hasFiles, hasChildFolders);
 
-        if (hasFiles) this.createTabButton(tabBar, TAB_ID_FILES, 'clapperboard', 'view.tabScenes', tabContent);
+        if (hasFiles) this.createTabButton(tabBar, TAB_ID_FILES, 'puzzle', 'view.tabEntries', tabContent);
         if (hasChildFolders) this.createTabButton(tabBar, TAB_ID_FOLDERS, 'folder-tree', 'view.tabSubfolders', tabContent);
         
         if (this.activeTabName) {
@@ -610,7 +604,6 @@ class WritingManagerPlusView extends ItemView {
         }
     }
 
-    // Tab & Filter Rendering
     renderTabContent(tabName, contentContainer, tabBar) {
         this.activeTabName = tabName;
         contentContainer.empty();
@@ -623,7 +616,7 @@ class WritingManagerPlusView extends ItemView {
         if (tabName === TAB_ID_FOLDERS) {
             this.renderChildFolderList(contentContainer);
         } else if (tabName === TAB_ID_FILES) {
-            this.renderSceneList(contentContainer);
+            this.renderEntryList(contentContainer);
         }
     }
 
@@ -653,8 +646,7 @@ class WritingManagerPlusView extends ItemView {
         return filterBar;
     }
 
-    // Item & List Rendering
-    renderSceneList(container) {
+    renderEntryList(container) {
         if (this.filteredFilesData.length === 0 && this.filesData.length > 0) {
             container.createEl('p', { text: t('view.filter.noResults'), cls: 'empty-folder-message' });
             return;
@@ -668,7 +660,7 @@ class WritingManagerPlusView extends ItemView {
         container.empty();
         this.renderedItemCount = 0;
         const parentEl = container.createEl('div', { cls: 'outliner-container' });
-        this.setupSceneDragAndDrop(parentEl);
+        this.setupEntryDragAndDrop(parentEl);
         this.renderMoreItems(parentEl);
         this.registerDomEvent(container, 'scroll', debounce(() => this.handleScroll(container, parentEl), 100));
     }
@@ -706,7 +698,6 @@ class WritingManagerPlusView extends ItemView {
         }
     }
     
-    // UI Element Creators
     createTabButton(tabBar, tabName, icon, titleKey, contentContainer) {
         const tabButton = tabBar.createEl('div', { cls: 'wmp-tabs-button', attr: { 'data-tab-name': tabName } });
         setIcon(tabButton, icon);
@@ -873,7 +864,6 @@ class WritingManagerPlusView extends ItemView {
         });
     }
 
-    // Event Handlers & Drag-and-Drop
     handleScroll(contentEl, containerEl) {
         if (!contentEl || !containerEl) return;
         if (contentEl.scrollTop + contentEl.clientHeight >= contentEl.scrollHeight - 200 && this.renderedItemCount < this.filteredFilesData.length) {
@@ -930,7 +920,7 @@ class WritingManagerPlusView extends ItemView {
         });
     }
 
-    setupSceneDragAndDrop(container) {
+    setupEntryDragAndDrop(container) {
         const onDragEnd = (e) => { const target = e.target.closest('[data-index]'); if (target) target.removeClass("is-dragging"); };
         this.registerDomEvent(container, 'dragstart', (e) => { 
             const target = e.target.closest('[data-index]'); 
@@ -948,7 +938,7 @@ class WritingManagerPlusView extends ItemView {
             const dropTarget = e.target.closest('[data-index]');
             if (!dropTarget || isNaN(draggedIdx)) return;
             const dropIdx = parseInt(dropTarget.dataset.index, 10);
-            if (draggedIdx !== dropIdx) this.reorderSceneFiles(draggedIdx, dropIdx);
+            if (draggedIdx !== dropIdx) this.reorderEntryFiles(draggedIdx, dropIdx);
         });
     }
     
@@ -960,7 +950,6 @@ class WritingManagerPlusView extends ItemView {
         });
     }
 
-    // Compilation Logic
     async executeCompilation() {
         const { compileOutputPath } = this.plugin.settings;
         if (compileOutputPath === ASK_EVERY_TIME) {
@@ -1066,7 +1055,6 @@ class WritingManagerPlusView extends ItemView {
         return compiledContent;
     }
 
-    // Data Handling & Helpers
     async loadDataForCurrentFolder() {
         this.currentFolderData = null;
         this.filesData = [];
@@ -1100,9 +1088,9 @@ class WritingManagerPlusView extends ItemView {
             }
             this.filesData = await Promise.all(sortedFiles.map(async file => ({ file, ...await this.extractMetadata(file) })));
         } else {
-            const sceneFiles = folder.children.filter(f => f instanceof TFile && f.extension === MARKDOWN_EXTENSION && !folderNotePaths.has(f.path));
-            this.filesData = await Promise.all(sceneFiles.map(async file => ({ file, ...await this.extractMetadata(file) })));
-            this.sortSceneFilesByOrder();
+            const entryFiles = folder.children.filter(f => f instanceof TFile && f.extension === MARKDOWN_EXTENSION && !folderNotePaths.has(f.path));
+            this.filesData = await Promise.all(entryFiles.map(async file => ({ file, ...await this.extractMetadata(file) })));
+            this.sortEntryFilesByOrder();
         }
         this.applyFilters();
     }
@@ -1143,13 +1131,13 @@ class WritingManagerPlusView extends ItemView {
         return childFolders;
     }
 
-    sortSceneFilesByOrder() {
+    sortEntryFilesByOrder() {
         const order = this.plugin.settings.fileOrder[this.plugin.settings.currentFolderPath] || [];
         const orderMap = new Map(order.map((path, index) => [path, index]));
         this.filesData.sort((a, b) => (orderMap.get(a.file.path) ?? Infinity) - (orderMap.get(b.file.path) ?? Infinity) || a.file.name.localeCompare(b.file.name));
     }
 
-    reorderSceneFiles(fromIndex, toIndex) {
+    reorderEntryFiles(fromIndex, toIndex) {
         const item = this.filesData.splice(fromIndex, 1)[0];
         this.filesData.splice(toIndex, 0, item);
         this.plugin.settings.fileOrder[this.plugin.settings.currentFolderPath] = this.filesData.map(d => d.file.path);
@@ -1214,11 +1202,9 @@ class WritingManagerPlusView extends ItemView {
 PLUGIN CORE
 ============= */
 
-/* WritingManagerPlusPlugin */
 class WritingManagerPlusPlugin extends Plugin {
     settings;
 
-    // Lifecycle Methods
     async onload() {
         await this.loadSettings();
         await loadTranslations(this);
@@ -1226,6 +1212,7 @@ class WritingManagerPlusPlugin extends Plugin {
 
         this.addSettingTab(new WritingManagerPlusSettingTab(this.app, this));
         this.registerView(VIEW_TYPE, (leaf) => new WritingManagerPlusView(leaf, this));
+        this.registerView(HELP_VIEW_TYPE, (leaf) => new WritingManagerPlusHelpView(leaf, this));
         
         this.addRibbonIcon('notebook-tabs', t('ribbon.title'), () => this.activateView());
         this.addPluginCommands();
@@ -1234,9 +1221,9 @@ class WritingManagerPlusPlugin extends Plugin {
 
     onunload() {
         this.app.workspace.detachLeavesOfType(VIEW_TYPE);
+        this.app.workspace.detachLeavesOfType(HELP_VIEW_TYPE);
     }
 
-    // Plugin Setup
     initializeDefaultStatuses() {
         if (!this.settings.statuses || this.settings.statuses.length === 0) {
             this.settings.statuses = [
@@ -1269,7 +1256,6 @@ class WritingManagerPlusPlugin extends Plugin {
         this.app.workspace.onLayoutReady(() => this.refreshView());
     }
 
-    // Event Handlers & File Operations
     async handleRename(file, oldPath) {
         const { fileOrder, folderOrder } = this.settings;
         let settingsChanged = false;
@@ -1372,7 +1358,6 @@ class WritingManagerPlusPlugin extends Plugin {
         this.refreshView();
     }
     
-    // View & Settings Management
     getView() {
         const leaf = this.app.workspace.getLeavesOfType(VIEW_TYPE)[0];
         return leaf?.view instanceof WritingManagerPlusView ? leaf.view : null;
@@ -1382,6 +1367,13 @@ class WritingManagerPlusPlugin extends Plugin {
         this.app.workspace.detachLeavesOfType(VIEW_TYPE);
         const leaf = this.app.workspace.getRightLeaf(false);
         await leaf.setViewState({ type: VIEW_TYPE, active: true });
+        this.app.workspace.revealLeaf(leaf);
+    }
+
+    async activateHelpView() {
+        this.app.workspace.detachLeavesOfType(HELP_VIEW_TYPE);
+        const leaf = this.app.workspace.getLeaf(true);
+        await leaf.setViewState({ type: HELP_VIEW_TYPE, active: true });
         this.app.workspace.revealLeaf(leaf);
     }
 
@@ -1404,7 +1396,6 @@ class WritingManagerPlusPlugin extends Plugin {
         if (refreshView) this.refreshView();
     }
 
-    // Settings Migration
     migrateSettings() {
         let settingsUpdated = false;
         if (this.settings.metadataFields && this.settings.metadataFields.some(f => f.hasOwnProperty('role'))) {
