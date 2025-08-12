@@ -2,7 +2,8 @@
 
 A comprehensive tool for writers to structure, manage, and compile their long-form content.
 
-> ***한국어 문서는 하단에 있습니다.***
+> [!TIP]
+> **한국어 문서는 하단에 있습니다.**
 
 ## ⚠️ Disclaimer & Call for Contribution
 
