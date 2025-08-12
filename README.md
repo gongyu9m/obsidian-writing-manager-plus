@@ -2,7 +2,7 @@
 
 A comprehensive tool for writers to structure, manage, and compile their long-form content.
 
-> **[🇰🇷 한국어 문서 바로가기 (Click here for Korean Documentation)](README.ko.md)**
+> ***한국어 문서는 하단에 있습니다.***
 
 ## ⚠️ Disclaimer & Call for Contribution
 
@@ -75,8 +75,6 @@ This plugin is useful for any creator working on long-form content. It's especia
 # 옵시디언 집필 매니저 플러스
 
 창작자들이 자신의 긴 글을 구조화하고, 관리하며, 하나의 원고로 컴파일하도록 돕는 도구입니다.
-
-> **[🇺🇸 Click here for English Documentation](README.md)**
 
 ## ⚠️ 면책 조항 및 기여 요청
 
