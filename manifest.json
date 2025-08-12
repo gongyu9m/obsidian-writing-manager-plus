@@ -1,8 +1,8 @@
 {
   "id": "writing-manager-plus",
   "name": "Writing Manager +",
-  "version": "0.0.1",
-  "description": "A comprehensive tool for writers to structure, manage, and compile their novels.",
+  "version": "0.0.2",
+  "description": "A comprehensive tool for writers to structure, manage, and compile long-form content.",
   "author": "Google AI Studio",
   "authorUrl": "https://aistudio.google.com/",
   "isDesktopOnly": true
